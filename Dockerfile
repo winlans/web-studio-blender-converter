@@ -39,13 +39,10 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY scripts/blender-converter/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY scripts/blender-converter/handler.py \
-     scripts/blender-converter/runpod_entrypoint.py \
-     scripts/blender-converter/blender_standardize_glb.py \
-     ./
+COPY handler.py blender_standardize_glb.py ./
 
 RUN useradd --create-home --uid 10001 converter \
     && mkdir -p /tmp/model-convert \
@@ -53,4 +50,4 @@ RUN useradd --create-home --uid 10001 converter \
 
 USER converter
 
-CMD ["python", "-u", "/app/runpod_entrypoint.py"]
+CMD ["python", "-u", "/app/handler.py"]

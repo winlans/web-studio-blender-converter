@@ -6,9 +6,9 @@
 ## 构建
 
 ```bash
-cd web-studio
+cd web-studio-blender-converter
 docker build \
-  -f scripts/blender-converter/Dockerfile \
+  --platform linux/amd64 \
   -t <registry>/cysta-model-converter:1.0.0 \
   .
 docker push <registry>/cysta-model-converter:1.0.0
@@ -23,15 +23,17 @@ docker push <registry>/cysta-model-converter:1.0.0
 8 GiB 内存和 6 GiB container disk。入口由 `runpod.serverless.start()` 提供，不需要
 暴露容器端口。
 
-从 GitHub 创建 endpoint 时选择包含本目录的分支，Dockerfile Path 填：
+从 GitHub 创建 endpoint 时使用与 `web-studio` worker 相同的仓库根目录部署方式：
 
 ```text
-/scripts/blender-converter/Dockerfile
+Branch: main
+Dockerfile Path: /Dockerfile
+Build context: /
 ```
 
-Runpod 当前可能仍按默认分支 `main` 做 handler 静态检查。如果代码仅在其他分支，
-页面会显示 “Could not find runpod.serverless.start()”，这不会阻止所选分支的构建。
-实际 worker 入口是 `runpod_entrypoint.py`。
+Dockerfile 的构建上下文是仓库根目录，直接复制根目录中的 `requirements.txt`、
+`handler.py` 和 `blender_standardize_glb.py`。Worker 入口是 `handler.py`，其中直接
+调用 `runpod.serverless.start()`。
 
 必需环境变量：
 

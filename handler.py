@@ -380,3 +380,9 @@ def handler(job: dict[str, Any]) -> dict[str, Any]:
     except Exception as exc:
         print(f"[model-convert] unexpected error: {type(exc).__name__}: {exc}", flush=True)
         raise ModelConvertError("model conversion failed") from exc
+
+
+if __name__ == "__main__":
+    import runpod
+
+    runpod.serverless.start({"handler": handler})
